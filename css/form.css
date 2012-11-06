@@ -1,0 +1,91 @@
+.row {  
+  padding: 8px;
+}
+div.form {
+  /*font-weight: bold;*/
+  font-size: 14px;
+  width: 800px;
+  margin: auto;  
+}
+div.form span.required {
+  color: red;
+  font-weight:bold;
+}
+div.form .row label.label ,
+div.form .row label {
+  display: inline-block;
+  width: 140px;  
+  text-align: right;
+ /* font-weight: bold;*/
+  font-size: 14px;
+}
+
+div.form .row label.verror {  
+  color: red;
+  padding-left: 10px;
+  text-align: left;
+}
+
+
+div.form .row textarea.txt ,
+div.form .row input.txt {
+  width: 300px;
+  padding: 5px;
+  font-size: 16px;
+  border: 1px solid #e0e0e0;
+}
+
+div.form .row .small_area {
+  height: 100px;
+}
+
+div.form .radioform label {
+   width: 40px;   
+   text-align:left;
+}
+
+div.form label.verror {
+  width: 200px;
+}
+
+input.btn,
+div.form .buttons input {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 16px;
+}
+input.small_btn {
+  padding: 3px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.box_outer_wrap {
+  font-size: 14px;
+  font-weight: bold;
+  padding: 10px;
+  background: #FFF;
+  border: 1px solid #CCC;
+}
+
+.result {
+  border: 3px solid #EFEFEF;  
+  margin-left:150px;
+  width: 290px;
+  display: none;
+}
+.result table {
+  padding: 0;
+  margin: 0;
+}
+.result table td ,
+.result table th {  
+}
+.result table th {
+  width: 80px;
+  text-align: right;
+  padding-right: 10px;
+}
+.result table td {
+  text-align: left;
+}

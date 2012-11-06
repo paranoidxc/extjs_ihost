@@ -1,0 +1,136 @@
+
+#top
+{
+    height: 42px;
+    margin: 13px auto;
+    width: 990px;
+    overflow: hidden;
+}
+#bottom
+{
+    border-top: 1px solid #d8d8d8;
+    line-height: 30px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.shopInfo
+{
+    float: right;
+    line-height: 30px;
+    font-size: 14px;
+    margin: 10px 0px;
+    height: 30px;
+    overflow: hidden;
+    width: 62%;
+    text-align: right;
+}
+.shopInfo span
+{
+    color: #f60000;
+    padding: 0px 5px;
+    font-weight: bold;
+}
+.nav
+{
+    background: url(../images/topLine.png) repeat-x bottom;
+    width: 100%;
+    height: 49px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+#error,
+.wrongMeg
+{
+  border: 1px solid #e0e0e0;
+  line-height: 30px;
+  padding: 5px 10px;
+	width:970px;
+	margin:0 auto 10px;
+}
+#error,
+.wrongMeg span
+{
+    font-size: 16px;
+    font-weight: bold;
+    color: #f60000;
+    padding-left: 5px;
+}
+
+.loginBG
+{
+    background: url(../images/loginBG.jpg) no-repeat;
+    width: 700px;
+    height: 300px;
+    margin: 20px auto;
+}
+.loginCont
+{
+    width: 95%;
+    margin: 5px auto;
+}
+.loginCont h3
+{
+    font-size: 25px;
+    color: #f60000;
+    line-height: 60px;
+    border-bottom: 1px solid #e7e7e7;
+    padding-left: 10px;
+}
+.loginCont .error_password,
+.loginCont .error_username,
+.loginCont span
+{
+    font-weight: bold;
+    color: #f60000;
+    padding: 0px 5px;
+}
+
+.loginCont table
+{
+    font-size: 14px;
+    margin: 20px 10px 0px;
+}
+.loginCont table td
+{
+    height: 60px;
+    padding-top: 5px;
+	padding-left:5px;
+	line-height:20px;
+}
+.inputText
+{
+    width: 300px;
+    height: 30px;
+    border: 1px solid #e0e0e0;
+    line-height: 30px;
+    font-size: 16px;
+}
+.lmTitle{
+	width:95%; 
+	margin:0 auto 10px;  
+	font-size: 25px;
+    color: #f60000;
+    line-height: 50px;
+    border-bottom: 1px solid #e7e7e7;
+    padding-left: 10px;
+	}
+	
+#success,
+.rightMeg{   
+  border: 1px solid #23ac03;
+  line-height: 30px;
+  padding: 5px 10px;
+	width:970px;
+	margin:0 auto 10px;}
+#success,	
+	.rightMeg span
+{
+    font-size: 16px;
+    font-weight: bold;
+    color: #23ac03;
+    padding-left: 5px;
+}
+.loginBtn{background:url(../images/loginBtn.jpg) no-repeat; width:70px; height:35px; border:none; cursor:pointer; margin-right:50px;}
+.resetBtn{background:url(../images/resetBtn.jpg) no-repeat; width:70px; height:35px; border:none; cursor:pointer;}

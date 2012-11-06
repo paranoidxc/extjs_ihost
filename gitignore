@@ -1,0 +1,5 @@
+protected/runtime/*
+.gitignore
+*.swp
+*.swo
+*.sublime-work*
