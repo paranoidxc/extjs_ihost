@@ -57,7 +57,7 @@ Ext.application({
         itemId: 'content_tab_depart',
         loader: {
           loadMask: true,
-          url: 'http://local.extjs_ihost.com/index.php?r=department/index',
+          url: "<?php echo url('department/index') ?>",
           scripts: true
           //contentType: 'html',
           //loadMask: true
@@ -72,7 +72,8 @@ Ext.application({
           }
         }
         //autoLoad: "http://local.extjs_ihost.com/index.php?r=department/index"        
-      },{
+      },
+      {
         title: '附件管理',
         iconCls: 'icon-display',
         id: 'content_tab_atts',
@@ -87,11 +88,12 @@ Ext.application({
             tabpanel_add_tab(tab, 'content_tab_atts', 'atts_container');
           }
         }        
-      },{
+      },
+      {
         title: 'test',
         iconCls: 'icon-display',
         id: 'content_tab_test',
-        itemId: 'content_tab_atts',
+        itemId: 'content_tab_test',
         loader: {
           url: "<?php echo url('admin/test') ?>",
           scripts: true,
@@ -100,6 +102,52 @@ Ext.application({
         listeners: {
           activate: function(tab) {
             tabpanel_add_tab(tab, 'content_tab_test', 'test_container');
+          }
+        }        
+      },
+      {
+        title: '文档管理',
+        iconCls: 'icon-display',
+        id: 'content_tab_articles',
+        itemId: 'content_tab_articles',
+        loader: {
+          url: "<?php echo url('admin/article') ?>",
+          scripts: true,
+          loadMask: true          
+        },
+        listeners: {
+          activate: function(tab) {
+            tabpanel_add_tab(tab, 'content_tab_articles', 'article_container');
+          }
+        }        
+      },{
+        title: '文档管理 Cat 21',
+        iconCls: 'icon-display',
+        id: 'content_tab_articles21',
+        itemId: 'content_tab_articles21',
+        loader: {
+          url: "<?php echo url('admin/article',array('category_id'=>21,'tab_id' =>'content_tab_articles21','container_id' => 'article21_container' )) ?>",
+          scripts: true,
+          loadMask: true          
+        },
+        listeners: {
+          activate: function(tab) {
+            tabpanel_add_tab(tab, 'content_tab_articles21', 'article21_container');
+          }
+        }        
+      },
+      {
+        title: '联动数据',
+        iconCls: 'icon-display',
+        id: 'content_tab_ld_data',        
+        loader: {
+          url: "<?php echo url('admin/syslditem') ?>",
+          scripts: true,
+          loadMask: true          
+        },
+        listeners: {
+          activate: function(tab) {
+            tabpanel_add_tab(tab, 'content_tab_ld_data', 'ld_data_container');
           }
         }        
       }
