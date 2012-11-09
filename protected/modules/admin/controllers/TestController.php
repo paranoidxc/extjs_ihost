@@ -47,7 +47,7 @@ class TestController extends GController
 
 	public function actionCreateData()
 	{
-		$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => 1 ) );		
+		$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => 1),array('order'=>'sort DESC'));
 		$this->renderPartial('createdata', array('fields' => $fields ),false,true);
 	}
 	

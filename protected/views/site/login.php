@@ -88,6 +88,22 @@ Ext.application({
           }
         }        
       },{
+        title: '模型管理',
+        iconCls: 'icon-display',
+        id: 'content_tab_model',
+        itemId: 'content_tab_model',
+        loader: {
+          url: "<?php echo url('admin/modelext') ?>",
+          scripts: true,
+          loadMask: true          
+        },
+        listeners: {
+          activate: function(tab) {
+            tabpanel_add_tab(tab, 'content_tab_model', 'modelext_container');
+          }
+        }        
+      },
+      {
         title: 'test',
         iconCls: 'icon-display',
         id: 'content_tab_test',
