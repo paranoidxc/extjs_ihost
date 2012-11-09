@@ -1,0 +1,102 @@
+<td width="75%">
+				<?php echo $form->hiddenField($model,'menu',array('size'=>60,'maxlength'=>63,'style' => 'width: 600px;')); ?>
+				<?php				
+				//$tags = CHtml::listData(Menu::model()->valid_list()->findAll(),'id','name');				
+				if( strlen($model->menu) > 0 ){
+					$criteria = new CDbCriteria();  
+					$criteria->condition = "find_in_set(id, '$model->menu')";
+					$_menus = Menu::model()->findall($criteria);
+					foreach( $_menus as $_menu ){ 
+						$r[] = array( 'id' => $_menu->id , 'title' => $_menu->name );
+					}
+				}
+				$init_select = json_encode($r);				
+				//$tags = array_values($tags);
+				$url = url('menu/ajax_list');
+				$this->widget('ext.select2.ESelect2',array(
+					'selector'=>'#Vegetable_menu',
+					//'data' =>$tags,
+				  	'options'=>array(				  						  		
+				  		'initSelection' => 'js:function(element,callback) { console.log(element ); callback( '.$init_select.' )}',
+					    //'tags'=>$tags,				   
+					    'minimumInputLength'=>1,
+					    'tags'=> '',
+					    'ajax'=>array(
+    						'url'=>"$url",
+    						'dataType'=>'json',
+						    'data'=>'js:function(term,page){
+						      return {
+						        q: term, 
+						        page_limit: 10				    
+						      };
+						    }',
+						    'results'=>'js:function(data,page){
+						      return {results: data.movies};
+						    }',
+						),
+						'formatResult'=>'js:movieFormatResult',
+						'formatSelection'=>'js:movieFormatSelection',   
+					),
+				  	'htmlOptions'=>array(  	
+					  	'width' => '800',					  	
+					    'multiple'=>'multiple'    
+				  	),
+				));
+				?>
+			<p>请从系统以存在菜谱中选择</p>
+			<?php echo $form->error($model,'menu'); ?>
+			</td>
+
+
+
+
+
+
+
+			<?php			
+				$tags = CHtml::listData(Menu::model()->findAll(),'name','name' );				
+				//$tags = CHtml::listData(Menu::model()->valid_list()->findAll(),'name','name' );				
+				$this->widget('ext.select2.ESelect2',array(				
+				  'model'=>$model,
+				  'attribute'=>'menu',
+				  'data'=>$tags,
+				  'htmlOptions'=>array(				  	
+				  	'width' => '600',
+				  	'style' => 'width: 600px;',
+				  	'multiple'=>'multiple',
+				  )
+				) ); 
+			?>	
+
+
+
+
+
+
+
+
+
+
+
+			<td width="75%">
+				<?php echo $form->textField($model,'main',array('size'=>60,'maxlength'=>63,'style' => 'width: 600px;')); ?>
+				<?php				
+				$tags = CHtml::listData(Vegetable::model()->valid_list()->findAll(),'name','name');
+				// Multiple data
+				$tags = array_values($tags);
+				$this->widget('ext.select2.ESelect2',array(
+					'selector'=>'#Menu_main',
+					'model'=>$model,
+				  	'attribute'=>'main',
+				  	'data'=>$tags,
+				  	'options'=>array(
+					    'tags'=>$tags,					    
+					),
+				  	'htmlOptions'=>array(  	
+					  	'width' => '400',					  	
+					    'multiple'=>'multiple'    
+				  	),
+				));
+				?>				
+				<?php echo $form->error($model,'main'); ?>
+		    </td>
