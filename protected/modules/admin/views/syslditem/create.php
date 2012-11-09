@@ -12,7 +12,6 @@ Ext.define('State', {
 });    
 
 
-
 // Example of automatic remote store queries and use of various display templates
 var remoteStatesStore = Ext.create('Ext.data.Store', {
     model: 'State',
@@ -56,22 +55,7 @@ var form = Ext.create('Ext.form.Panel', {
     emptyText: "<?php echo $model->parent != null ? $model->parent->name: '' ?>",    
     root : {"text":"请选择上级栏目","id":''},
     storeUrl : "<?php echo url('admin/syslditem/tree')?>"
-  },
-  { 
-    xtype:'comboboxselect',
-    value: [ "1","2",'3','4','5'],
-    name:'text[]',     
-    valueField:'id',
-   	fieldLabel : '上级栏目', 
-    queryMode: 'local',
-    forceSelection: false,
-    createNewOnEnter: true,
-    createNewOnBlur: true,
-    filterPickList: false,
-    displayField: "name",
-    store: 'RemoteStates'    
-  },
-	{
+  },{
 		fieldLabel: '标识',
 		blankText : '名称不能为空',
 		name: 'ident',		
@@ -85,19 +69,20 @@ var form = Ext.create('Ext.form.Panel', {
 		name: 'value',		
 		value: "<?php echo $model->value; ?>"
 	},{
-		xtype:'combobox',
-		fieldLabel : '状 态',
-		displayField: 'name',
-		name:'status',        
-		value: "<?php echo $model->status; ?>",
-		blankText : '状态不能为空',
-		allowBlank: true,
-		store: global_status_list,
-		queryModel: 'local',
-		valueField:'id',
-		typeAhead: true,
-		editable : false 
-	}
+    xtype:'combobox',
+    fieldLabel : '状 态',
+    displayField: 'name',
+    name:'status',        
+    value: "<?php echo $model->status; ?>",
+    blankText : '状态不能为空',
+    allowBlank: true,
+    store: global_status_list,
+    queryModel: 'local',
+    valueField:'id',
+    typeAhead: true,
+    editable : false        
+  }
+  
 	] ,  buttons: [{
 		text: '保存',
 		handler: ihost.form_submit/*function(){

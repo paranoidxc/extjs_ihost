@@ -2,7 +2,13 @@
 
 Ext.onReady(function() {
 	
-
+	global_status_list = Ext.create('Ext.data.Store',{
+    fields:['id','name'],
+    data:[ 
+      { 'id' :'0', 'name':'正常'},
+      { 'id' :'1', 'name':'禁止登录'}
+    ]
+  });
 
 	Ext.tip.QuickTipManager.init();
 	Ext.window.Window.prototype.modal = true; // WINDOW默认显示遮罩层
