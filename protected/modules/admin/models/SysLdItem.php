@@ -48,6 +48,8 @@ class SysLdItem extends CActiveRecord
 			array('value', 'length', 'max'=>255),
 			array('name','required'),
 			array('ident','unique', 'allowEmpty' => true ),
+
+			array('parent_id', 'compare', 'allowEmpty' => true, 'compareAttribute' => 'id', 'operator' => '!=', 'strict' => true,'message' =>' 上级类别不能为自己本身' ),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, name, ident, parent_id, value, iorder, status, memo', 'safe', 'on'=>'search'),

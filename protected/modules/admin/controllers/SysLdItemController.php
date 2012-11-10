@@ -50,11 +50,35 @@ class SysLdItemController extends Controller
 			$id = $_POST['id'];
 			$model = $this->loadModel($id);
 			$model->attributes = $_POST;
+			$model->parent_id = empty($model->parent_id) ? 0 : $model->parent_id;
 			$msg = 'update suc';
 		}else {
-			$model = new SysLdItem;
-			$model->attributes = $_POST;			
-			$msg = 'add suc';
+			if( $_POST['create_way'] == 0 ){
+				$config = $_POST['SysLdItem']['config'];
+				$items = explode("\n",$config);				
+				foreach($items as $item ){					
+				  list($name,$ident,$iorder,$value,$status) = explode("|",$item);
+				  $arr['name'] 		= $name;
+				  $arr['ident'] 	= $ident;
+				  $arr['iorder'] 	= $iorder;
+				  $arr['status'] 	= $status;
+				  $arr['value'] 	= $value;
+				  $arr['parent_id'] = isset($_POST['parent_id']) ? $_POST['parent_id'] : 0;
+					$model = new SysLdItem;
+				  $model->attributes = $arr;
+				  if( $model->save() ) {
+				  	$model->make_level();				  	
+				  }
+				}
+				$r = array( 'success' => true, 'msg' => '批量添加成功' );
+				echo CJSON::encode($r);
+				exit;	
+			}else {
+				$model = new SysLdItem;
+				$model->attributes = $_POST;		
+				$model->parent_id = empty($model->parent_id) == 0  ? 0 : $model->parent_id;					
+				$msg = 'add suc';
+			}			
 		}
 		if($model->save()) {
 			$model->make_level();

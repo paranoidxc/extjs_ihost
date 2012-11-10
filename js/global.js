@@ -1,12 +1,10 @@
-
-
 Ext.onReady(function() {
 	
 	global_status_list = Ext.create('Ext.data.Store',{
     fields:['id','name'],
     data:[ 
       { 'id' :'0', 'name':'正常'},
-      { 'id' :'1', 'name':'禁止登录'}
+      { 'id' :'1', 'name':'删除'}
     ]
   });
 
@@ -25,6 +23,44 @@ Ext.onReady(function() {
 	//Ext.MessageBox.wait('保存数据中，请稍候......','提示');
 	
 	ihost.__wins = [];
+	ihost.form_cancel = function() {
+		ihost.last_win.close();
+	}
+	ihost.form_submit = function(form,store){
+			//var form = this.up('form').getForm();
+			form = form.getForm();
+			var data = form.getValues(); 
+			if (form.isValid()) {
+				Ext.Ajax.request({  
+					url: form.url,
+					params : data,
+					success: function(resp,opts) {
+						var respText = Ext.decode(resp.responseText); 
+						if( respText.success ) {
+							ihost.last_win.close();
+							//Ext.getCmp('ld_data_container').store.load();                      
+							store.load();
+							Ext.MessageBox.alert('操作成功',(respText.msg || '保存成功'));
+							
+						}else {
+							var data = Ext.decode(respText.r);
+							var teststring = '';
+							for (var x in data){
+								if (data.hasOwnProperty(x)){
+									teststring += data[x] +"<br>";
+								}
+							}
+							Ext.MessageBox.show({
+								title: '操作错误',
+								msg: teststring,
+								buttons: Ext.MessageBox.OK,                       
+								icon: 'x-message-box-error'
+							});
+						}
+					}
+				});
+			}      
+	}
 	ihost.open = function(url,title,store,icon,target,size){
 		target='window';
 		if(!url) return false;

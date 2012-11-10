@@ -1,15 +1,19 @@
 <script type="text/javascript"> 
-var fns = {};  
-fns.addModel = function(){    
-  var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id=-1';        
-  //ihost.open(url,'create ld data',store,'','object');
-  ihost.open(url,'create ld data',store);
-};
+  var fns = {};  
+  fns.f5 = function() {
+    store.load();
+  }
+
+  fns.addModel = function(){    
+    var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id=-1';        
+    //ihost.open(url,'create ld data',store,'','object');
+    ihost.open(url,'添加联动数据',store);
+  };
   
   fns.updateModel = function(grid,rowIndex,colIndex) {
     var rec = grid.getStore().getAt(rowIndex);  
     var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+rec.data.id;    
-    ihost.open( url,' create ld data',store);
+    ihost.open( url,'更新联动数据',store);
   }
 
 Ext.define('SyslddataModel',{
@@ -139,7 +143,7 @@ var grid = Ext.create('Ext.grid.Panel', {
             text: '刷新',
             iconCls: 'icon-refresh',
             flagStr: '刷新数据',
-            handler: function(){}
+            handler: fns.f5
           },{
             text: '添加',
             iconCls: 'icon-add',
