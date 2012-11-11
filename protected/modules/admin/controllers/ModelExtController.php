@@ -27,7 +27,7 @@ class ModelExtController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','list'),
+				'actions'=>array('index','view','list','save'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -76,6 +76,29 @@ class ModelExtController extends Controller
 		$this->render('create',array(
 			'model'=>$model,
 		));
+	}
+
+	public function actionSave()
+	{
+		$r = array( 'success' => false, 'msg' => '操作失败' );		
+		if( isset($_POST['id']) && !empty($_POST['id']) ) {
+			$id = $_POST['id'];
+			$model = $this->loadModel($id);
+			$model->attributes = $_POST;
+			$msg = 'update suc';
+		}else {
+			$model = new ModelExt;
+			$model->attributes = $_POST;
+			$msg = 'add suc';
+		}
+		if($model->save()) {
+			$r = array( 'success' => true, 'msg' => $msg );
+		}else {
+			$r['msg'] = 'ffff';
+			$r['r'] = CActiveForm::validate($model);
+		}
+		echo CJSON::encode($r);
+		exit;		
 	}
 
 	/**
@@ -132,8 +155,8 @@ class ModelExtController extends Controller
 			header('Content-type: application/json');
 			if( $id == -1 ){
 				$model = new ModelExt;				
-				$model->status = '1';	
-				$model->itype = '0';	
+				//$model->status = '1';	
+				//$model->itype = '0';	
 			}else {
 				$model = $this->loadModel($id);				
 			}			
@@ -157,7 +180,7 @@ class ModelExtController extends Controller
 			}
     	$r['data'] = $models;		
     }
-    	echo CJSON::encode($r);
+    echo CJSON::encode($r);
 	}
 
 	/**

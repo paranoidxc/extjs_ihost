@@ -3,3 +3,5 @@ protected/runtime/*
 *.swp
 *.swo
 *.sublime-work*
+upfiles/*
+assets/*
