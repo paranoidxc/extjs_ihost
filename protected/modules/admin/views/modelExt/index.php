@@ -1,6 +1,6 @@
 <script type="text/javascript"> 
-Ext.onReady(function() {  
-  var fns = {};  
+Ext.onReady(function() {    
+  var fns = {}; 
   fns.getSel = function(){    
     var nodes = grid.getSelectionModel().getSelection();
     ids = '';
@@ -10,25 +10,23 @@ Ext.onReady(function() {
       }           
     }
     return (nodes.length >= 1 ? ids : false);    
-  };
+  };   
 
   fns.f5 = function() {
     store.load();
   }
-
   fns.addModel = function(){    
     var url = Ext.ModelManager.getModel('ModelExt').getProxy().url+'&id=-1';    
     ihost.open(url,'添加模型',store);
   };
 
-  fns.updateModel = function(grid=null,rowIndex=null,colIndex=null) {  	
+  fns.updateModel = function(grid,rowIndex,colIndex) {   
     if( grid.store != undefined) {
       var rec = grid.getStore().getAt(rowIndex);  
       var url = Ext.ModelManager.getModel('ModelExt').getProxy().url+'&id='+rec.data.id;                
       ihost.open( url,'编辑模型',store);        
     }
   }
-
   fns.delModel = function() {
     ids = fns.getSel();
     if( ids ) {
@@ -71,7 +69,7 @@ Ext.onReady(function() {
   var itemsPerPage = 20;
   var store = Ext.create('Ext.data.Store', {
     model : 'ModelExt',
-   	pageSize: itemsPerPage, // items per page
+    pageSize: itemsPerPage, // items per page
     proxy: {        
       type: 'ajax',       
       api: {
@@ -179,9 +177,10 @@ Ext.onReady(function() {
     }
   });
 
-	var com = Ext.getCmp('content_tab_model'); 
-	if( !com.items.length ) {
-	  com.add( grid );  
-	}
+  var com = Ext.getCmp('content_tab_model'); 
+  if( !com.items.length ) {
+    com.add( grid );  
+  }
+
 });
 </script>

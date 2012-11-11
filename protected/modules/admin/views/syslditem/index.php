@@ -1,4 +1,5 @@
 <script type="text/javascript"> 
+Ext.onReady(function() {
   var fns = {};  
   fns.getSel = function(){    
     var nodes = grid.getSelectionModel().getSelection();
@@ -21,13 +22,12 @@
     ihost.open(url,'添加联动数据',store);
   };
   
-  fns.updateModel = function(grid=null,rowIndex=null,colIndex=null) {
+  fns.updateModel = function(grid,rowIndex,colIndex) {
     if( grid.store != undefined) {
       var rec = grid.getStore().getAt(rowIndex);  
       var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+rec.data.id;                
       ihost.open( url,'更新联动数据',store);        
-    }else {
-      alert("!");
+    }else {      
       ids = fns.getSel();
       if( ids ) {      
         var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+ids;    
@@ -226,8 +226,9 @@
     ]
   });
 
-var com = Ext.getCmp('content_tab_ld_data'); 
-if( !com.items.length ) {
-  com.add( grid );  
-}
+  var com = Ext.getCmp('content_tab_ld_data'); 
+  if( !com.items.length ) {
+    com.add( grid );  
+  }
+});
 </script>

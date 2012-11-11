@@ -188,7 +188,8 @@ class SysLdItemController extends Controller
 	public function actionTree()
 	{
 		$list = SysLdItem::model()->FullTree(0);		
-		echo json_encode($list);
+		//echo json_encode($list);
+		echo CJSON::encode($list);
 		exit;
 		$list = SysLdItem::model()->ldtree();			
 		$r = '';
