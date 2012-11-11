@@ -76,7 +76,7 @@ class SysLdItemController extends Controller
 			}else {
 				$model = new SysLdItem;
 				$model->attributes = $_POST;		
-				$model->parent_id = empty($model->parent_id) == 0  ? 0 : $model->parent_id;					
+				$model->parent_id = empty($model->parent_id) ? 0 : $model->parent_id;					
 				$msg = 'add suc';
 			}			
 		}
@@ -126,14 +126,33 @@ class SysLdItemController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete($id=0)
 	{
+		$result = array( 'success' => false , 'msg' => 'error' );
+		$ids = $_REQUEST['id'];
+		$ids = explode(',',$ids);
+		if( is_array( $ids ) ) {
+			foreach( $ids as $id )	{				
+				if( (int)$id != 0 ){
+					$model = $this->loadModel($id);
+					if( !empty($model) ) {
+						$model->status = (int)(!$model->status);
+						$model->save();						
+					};
+				}
+			}
+			$result['msg'] = '操作成功';
+			$result['success'] = true;
+		}		
+		echo json_encode($result);
+		exit;
 		$record = $this->loadModel($id);
 		$record->status = 1;
 		$record->save();		
 		user()->setFlash('success','记录 '.$record->name.' 停用成功！');		
 		$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 		exit;
+
 
 		if(Yii::app()->request->isPostRequest)
 		{
@@ -168,11 +187,21 @@ class SysLdItemController extends Controller
 
 	public function actionTree()
 	{
+		$list = SysLdItem::model()->FullTree(0);		
+		echo json_encode($list);
+		exit;
 		$list = SysLdItem::model()->ldtree();			
 		$r = '';
 		if ($list){
 			foreach( $list as & $model ){				
-				$r[] = array('id' => $model->id, 'text'=>$model->name );
+				$r[] = array(
+					'id' 			=> $model->id, 
+					'text'		=>$model->name,
+					'ident' 	=> $model->ident,
+					'iorder'	=> $model->iorder,
+					'value'		=> $model->value,
+					'status'	=> $model->status
+				);
 				//$model->parent_id = $model->parent ? $model->parent->name :'无';								
 			}    				
     }		    

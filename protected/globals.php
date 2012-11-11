@@ -306,3 +306,8 @@ function array_to_json( $array ){
 
     return $result;
 }
+
+function general_status($status){
+  $general_status = array( '正常', '标记删除');  
+  return $general_status[$status];
+}

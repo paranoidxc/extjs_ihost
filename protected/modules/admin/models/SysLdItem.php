@@ -130,6 +130,34 @@ class SysLdItem extends CActiveRecord
 		}
 	}
 
+	public function tree($pid=0)
+	{
+		$list = self::FullTree(0);
+		return $list;
+	}
+
+	public function FullTree($p_id = 0)
+	{
+		$models = SysLdItem::model()->findAll( "parent_id = :p_id Order By iorder DESC ", array(":p_id" => $p_id)  );
+		$list = array();
+		foreach( $models as $model ){
+			$sub = self::FullTree($model->id);
+			$_t['id'] 		= $model->id;
+			$_t['text'] 	= $model->name;
+			$_t['title'] 	= $model->name;			
+			$_t['ident'] 	= $model->ident;
+			$_t['iorder'] = $model->iorder;
+			$_t['value'] 	= $model->value;
+			$_t['status'] = general_status($model->status);
+			$_t['children'] = $sub;
+			//$_t['memo'] = $model->memo;			
+			//$_t['abc'] 	= 'fffffffff';
+			$list[] = $_t;
+		}	
+    return $list;
+	}
+
+
 	/**
 	 * @return array relational rules.
 	 */

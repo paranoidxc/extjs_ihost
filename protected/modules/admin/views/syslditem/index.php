@@ -1,5 +1,16 @@
 <script type="text/javascript"> 
   var fns = {};  
+  fns.getSel = function(){    
+    var nodes = grid.getSelectionModel().getSelection();
+    ids = '';
+    if( nodes.length ) {
+      for( i=0; i< nodes.length ; i ++ ){             
+        ids += nodes[i].data.id+ ',';
+      }           
+    }
+    return (nodes.length >= 1 ? ids : false);    
+  };
+
   fns.f5 = function() {
     store.load();
   }
@@ -11,34 +22,78 @@
   };
   
   fns.updateModel = function(grid,rowIndex,colIndex) {
+    ids = fns.getSel();
+    if( ids ) {      
+      var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+ids;    
+      ihost.open( url,'更新联动数据',store);        
+    }else {
+      Ext.Msg.alert("操作提示", '请选择要删除的记录'); 
+    }  
+    /*
     var rec = grid.getStore().getAt(rowIndex);  
     var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+rec.data.id;    
     ihost.open( url,'更新联动数据',store);
+    */
   }
 
-Ext.define('SyslddataModel',{
-  extend: 'Ext.data.Model',
-  fields: [
-  {name: "id"},
-  {name: "name"},
-  {name: "parent_id"},
-  {name:'ident'},
-  {name:'iorder'},
-  {name:'status'},
-  {name:'value'}
-  ],
-  proxy: {
-    type: 'rest',
-    url :  WEB_PREFIX+'index.php?r=admin/syslditem/index'
-  }      
-});  
-var store = Ext.create('Ext.data.Store', {
-  model: 'SyslddataModel', 
-    //pageSize: itemsPerPage, // items per page
+  fns.delModel = function() {
+    ids = fns.getSel();
+    if( ids ) {
+      Ext.MessageBox.confirm('操作提示','修改记录的状态，正常改为删除，反之亦然',function(btn){
+        if( btn == 'yes') {
+          Ext.Ajax.request({
+            url: "<?php echo url('admin/syslditem/delete') ?>",
+            params : {'id' : ids },
+            success: function(resp,opts) {          
+              var respText = Ext.decode(resp.responseText);                             
+              Ext.Msg.alert('', respText.msg); 
+              store.load();
+            },
+            failure: function(resp,opts) { 
+              var respText = Ext.decode(resp.responseText); 
+              Ext.Msg.alert('错误', respText.msg); 
+            }
+          });
+        }
+      });
+    }else {
+      Ext.Msg.alert("操作提示", '请选择要更新的记录'); 
+    }
+  }
+
+  Ext.define('SyslddataModel',{
+    extend: 'Ext.data.Model',
+    fields: [
+      {name: "id"},
+      {name: 'text', type: 'string'},
+      {name: 'ident', type: 'string'},
+      {name: 'iorder', type: 'string'},
+      {name: 'value', type: 'string'},   
+      {name: 'status', type: 'string'},   
+      {name: 'memo', type: 'string'}
+    ],
+    proxy: {
+      type: 'rest',
+      url :  WEB_PREFIX+'index.php?r=admin/syslditem/index'
+    }      
+  });  
+
+  var store = Ext.create('Ext.data.TreeStore', {
+    model : 'SyslddataModel',
+    root: {"text":".","children": '' },
+    proxy: {        
+      type: 'ajax',       
+      url: "<?php echo url('admin/syslditem/tree') ?>"
+    }       
+  });
+
+  var _store = Ext.create('Ext.data.Store', {
+    model: 'SyslddataModel', 
+      //pageSize: itemsPerPage, // items per page
     proxy: {        
       type: 'ajax',       
       api: {
-        read:  WEB_PREFIX+'index.php?r=admin/syslditem/list',
+        read:  WEB_PREFIX+'index.php?r=admin/syslditem/tree',
         create: WEB_PREFIX+'index.php?r=admin/syslditem/list',
         update: WEB_PREFIX+'index.php?r=admin/syslditem/list',
         destroy: WEB_PREFIX+'index.php?r=admin/syslditem/list',
@@ -63,105 +118,76 @@ var store = Ext.create('Ext.data.Store', {
     autoLoad : true 
   });
 
-var grid = Ext.create('Ext.grid.Panel', {
-  store: store,     
-  id: 'ld_data_container',
-  multiSelect: true,
-  loadMask: true,
-  selModel: Ext.create('Ext.selection.CheckboxModel'),
-  columns: [ 
-  Ext.create('Ext.grid.RowNumberer'), 
-  {
-    text: '名称',
-    flex: 1,
-    dataIndex: 'name',
-    editor:{
-      xtype: 'textfield',
-      allowBlank: false
-    }
-  },{
-        text: '上级类别',  //4          
-        width: 100,
-        dataIndex: 'parent_id',
-        editor:{
-          xtype: 'textfield',
-          allowBlank: false
-        }
+  var grid = Ext.create('Ext.tree.Panel', {   
+    autoScroll : true,
+    rootVisible: false,
+    height: 500,    
+    id: 'ld_data_container',
+    //renderTo: Ext.getBody(),
+    store: store,
+    dockedItems:[{
+      xtype: 'toolbar',
+      items: [{
+        text: '刷新',
+        iconCls: 'icon-refresh',
+        flagStr: '刷新数据',
+        handler: fns.f5
       },{
-        text: '标识',  //4          
-        width: 100,
-        dataIndex: 'ident',
-        editor:{
-          xtype: 'textfield',
-          allowBlank: false
-        }
+        text: '添加',
+        iconCls: 'icon-add',
+        flagStr: '添加联动数据',
+        handler: fns.addModel
       },{
-        text: '自定义值',  //4          
-        width: 100,
-        dataIndex: 'value',
-        editor:{
-          xtype: 'textfield',
-          allowBlank: false
-        }
+        text: '更新',
+        iconCls: 'icon-edit',
+        flagStr: '更新联动数据',
+        handler: fns.updateModel
       },{
-        text: '排序值',  //4          
-        width: 100,
-        dataIndex: 'iorder',
-        editor:{
-          xtype: 'textfield',
-          allowBlank: false
-        }
-      },{
-        text: '状态',  //4          
-        width: 100,
-        dataIndex: 'status',
-        editor:{
-          xtype: 'textfield',
-          allowBlank: false
-        }
-      },{
-          xtype: 'actioncolumn', //8
-          width: 50,
-          items: [{
-            icon: 'images/icon/edit.gif', 
-            tooltip: 'Edit',
-            handler: fns.updateModel              
-          },{
-            width: 40,
-            icon: 'images/icon/delete.gif',
-            tooltip: 'Delete',
-            handler: function(grid, rowIndex, colIndex) {
-              //var rec = grid.getStore().getAt(rowIndex);
-              //Ext.MessageBox.alert('Delete',rec.get('book'));
-            }
-          }]
-        }],   
-        dockedItems: [{
-          xtype: 'toolbar',
-          cls: 'ihost-search-panel',
-          items: [{
-            text: '刷新',
-            iconCls: 'icon-refresh',
-            flagStr: '刷新数据',
-            handler: fns.f5
-          },{
-            text: '添加',
-            iconCls: 'icon-add',
-            flagStr: '添加用户',
-            handler: fns.addModel
-          },{
-            text: '删除',
-            iconCls: 'icon-delete',
-            flagStr: '删除用户，请选择用户',
-            handler: function(){}              
-          }]
-        }],     
-        width: '100%',
-        viewConfig: {
-        //stripeRows: true,
-        //enableTextSelection: true
-      }
-    });
+        text: '反转状态',
+        iconCls: 'icon-edit',
+        flagStr: '更新联动数据状态',
+        handler: fns.delModel
+      }]
+    }],
+    columns: [{
+      xtype: 'treecolumn',
+      text : '类别名称',
+      flex: 2,
+      sortable: true,
+      dataIndex: 'text'
+    },
+    {      
+      text : '唯一标识',
+      flex: 1,
+      sortable: true,
+      dataIndex: 'ident'
+    },
+    {      
+      text : '排序值',
+      flex: 1,
+      sortable: true,
+      dataIndex: 'iorder'
+    },
+    {      
+      text : '自定义值',
+      flex: 1,
+      sortable: true,
+      dataIndex: 'value'
+    },
+     {      
+      text : '状态',
+      flex: 1,
+      sortable: true,
+      dataIndex: 'status'
+    },
+    {
+      text : '备注',
+      dataIndex : 'memo',
+      menuDisabled : true,
+      hideable : false,
+      flex : 1
+    }]
+  });
 
 var com = Ext.getCmp('content_tab_ld_data'); 
 if( !com.items.length ) {

@@ -147,6 +147,7 @@ class DepartmentController extends Controller
 		$list = Department::model()->FullTree(0);		
 		echo json_encode($list);
 	}
+	
 	public function actionIndex()
 	{
 		if( isset($_REQUEST['id']) ) {
