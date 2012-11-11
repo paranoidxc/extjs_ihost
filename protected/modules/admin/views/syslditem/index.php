@@ -21,18 +21,19 @@
     ihost.open(url,'添加联动数据',store);
   };
   
-  fns.updateModel = function(grid,rowIndex,colIndex) {
-    if( grid != "undefined") {
+  fns.updateModel = function(grid=null,rowIndex=null,colIndex=null) {
+    if( grid.store != undefined) {
       var rec = grid.getStore().getAt(rowIndex);  
       var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+rec.data.id;                
       ihost.open( url,'更新联动数据',store);        
     }else {
+      alert("!");
       ids = fns.getSel();
       if( ids ) {      
         var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+ids;    
         ihost.open( url,'更新联动数据',store);        
       }else {
-        Ext.Msg.alert("操作提示", '请选择要删除的记录'); 
+        Ext.Msg.alert("操作提示", '请选择要编辑的记录'); 
       }    
     }
     /*
