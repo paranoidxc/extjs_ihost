@@ -99,8 +99,9 @@ Ext.onReady(function() {
 							panel.setAutoScroll && panel.setAutoScroll(true);
 						});
 					}
-				},
+				}
 				//buttonAlign: 'center',
+				/*,
 	      buttons: [{
 	    		text: '保存',
 	    		handler:function(){
@@ -142,7 +143,8 @@ Ext.onReady(function() {
 	    		handler:function(){
 	    			ihost.last_win.close();
 	    		}
-	    	}]			
+	    	}]	
+	    	*/		
 			}).show();
 			ihost.__wins.push(ihost.last_win);
 		}else if(target=='object' && com){ // 标签

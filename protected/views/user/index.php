@@ -38,12 +38,18 @@ Ext.onReady(function() {
 
   fns.addModel = function(){    
     var url = Ext.ModelManager.getModel('UserModel').getProxy().url+'&id=-1';    
-    ihost.open( url,'create user',store);    
+    ihost.open( url,'添加用户',store);    
+  };
+
+  fns.updateModel = function(grid,rowIndex,colIndex) {
+    var rec = grid.getStore().getAt(rowIndex);  
+    var url = Ext.ModelManager.getModel('UserModel').getProxy().url+'&id='+rec.data.id;    
+    ihost.open( url,' 编辑用户',store);
   };
   
   fns.addModelExt = function() {
     var url = '/index.php?r=admin/test/create';
-    ihost.open( url,'create user');    
+    ihost.open( url,'添加用户');    
   }
 
   fns.ModelExtDataCreate = function() {
@@ -51,13 +57,7 @@ Ext.onReady(function() {
     ihost.open( url,'create model ext data');     
   }
 
-
-
-  fns.updateModel = function(grid,rowIndex,colIndex) {
-    var rec = grid.getStore().getAt(rowIndex);  
-    var url = Ext.ModelManager.getModel('UserModel').getProxy().url+'&id='+rec.data.id;    
-    ihost.open( url,' update user',store);
-  }
+  
 
   fns.delModel = function() {
     ids = fns.getSel();
@@ -257,7 +257,8 @@ Ext.onReady(function() {
             }]
         }],     
       width: '100%',
-      title: '用户管理',
+      border : false,
+      //title: '用户管理',
       //renderTo: Ext.getCmp('content_tab_user'),
       viewConfig: {
         stripeRows: true,

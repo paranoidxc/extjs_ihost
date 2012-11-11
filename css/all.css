@@ -434,3 +434,6 @@ td.detabno .x-form-item{margin-bottom:0px;}
     position:relative;
     overflow:hidden;
 }
+.x-grid-row .x-grid-cell {
+    font-size: 12px;
+}

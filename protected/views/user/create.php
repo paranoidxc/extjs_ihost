@@ -131,10 +131,6 @@ var form = Ext.create('Ext.form.Panel', {
                   }
                 });           
               return ;
-              
-            
-
-            
                form.submit({
                   clientValidation: true,
                   url: form.url,
@@ -207,9 +203,7 @@ var form = Ext.create('Ext.form.Panel', {
             }
           },{
           text:'取消',
-          handler:function(){
-            //ihost.last_win.close();
-          }
+          handler: ihost.form_cancel            
         }]
 
 

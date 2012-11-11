@@ -22,13 +22,19 @@
   };
   
   fns.updateModel = function(grid,rowIndex,colIndex) {
-    ids = fns.getSel();
-    if( ids ) {      
-      var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+ids;    
+    if( grid != "undefined") {
+      var rec = grid.getStore().getAt(rowIndex);  
+      var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+rec.data.id;                
       ihost.open( url,'更新联动数据',store);        
     }else {
-      Ext.Msg.alert("操作提示", '请选择要删除的记录'); 
-    }  
+      ids = fns.getSel();
+      if( ids ) {      
+        var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+ids;    
+        ihost.open( url,'更新联动数据',store);        
+      }else {
+        Ext.Msg.alert("操作提示", '请选择要删除的记录'); 
+      }    
+    }
     /*
     var rec = grid.getStore().getAt(rowIndex);  
     var url = Ext.ModelManager.getModel('SyslddataModel').getProxy().url+'&id='+rec.data.id;    
@@ -128,6 +134,16 @@
     dockedItems:[{
       xtype: 'toolbar',
       items: [{
+        text:'全部展开',
+        handler: function(){
+          grid.expandAll();
+        }
+      },{
+        text:'全部收起',
+        handler: function(){
+          grid.collapseAll();
+        }
+      },{
         text: '刷新',
         iconCls: 'icon-refresh',
         flagStr: '刷新数据',
@@ -186,7 +202,27 @@
       menuDisabled : true,
       hideable : false,
       flex : 1
-    }]
+    },
+    {
+      xtype: 'actioncolumn', //8
+      width: 50,
+      items: [{
+        icon: 'images/icon/edit.gif', 
+        tooltip: '编辑该记录',
+        handler: function(grid, rowIndex, colIndex) {
+          fns.updateModel(grid,rowIndex,colIndex);              
+        }
+      }/*,{
+        width: 40,
+        icon: 'images/icon/delete.gif',
+        tooltip: 'Delete',
+        handler: function(grid, rowIndex, colIndex) {
+          var rec = grid.getStore().getAt(rowIndex);
+          Ext.MessageBox.alert('Delete',rec.get('book'));
+        }
+      }*/]
+    }
+    ]
   });
 
 var com = Ext.getCmp('content_tab_ld_data'); 
