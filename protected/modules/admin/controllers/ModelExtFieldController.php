@@ -132,10 +132,17 @@ class ModelExtFieldController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('ModelExtField');
-		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
-		));
+		$id = $_GET['id'];
+		$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $id ));
+		$r = array();
+		foreach($fields as $field){			
+			$r[] = array( 'id'	=>$field->id,
+										'model_id' => $field->model_id,
+										'field_name' => $field->field_name,
+										'display_name'=>$field->display_name );
+		}		
+		$fields = array_to_json($r);		
+		$this->renderPartial('index',array('fields'=>$fields),false,true);
 	}
 
 	/**

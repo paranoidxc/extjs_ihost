@@ -33,6 +33,7 @@ Ext.application({
         iconCls: 'icon-display',
         id: 'content_tab_user',
         itemId: 'content_tab_user',
+        closable: true,
         loader: {     
           loadMask: true,     
           url: "http://local.extjs_ihost.com/index.php?r=user/index",

@@ -22,11 +22,18 @@ Ext.onReady(function() {
 
   fns.updateModel = function(grid,rowIndex,colIndex) {   
     if( grid.store != undefined) {
-      var rec = grid.getStore().getAt(rowIndex);  
+      var rec = grid.getStore().getAt(rowIndex);        
       var url = Ext.ModelManager.getModel('ModelExt').getProxy().url+'&id='+rec.data.id;                
       ihost.open( url,'编辑模型',store);        
     }
   }
+
+  fns.listModelField = function(grid,rowIndex,colIndex){
+    var rec = grid.getStore().getAt(rowIndex);      
+    var url = "index.php?r=/admin/modelextfield/index&id="+rec.data.id;
+    ihost.open( url,'模型 '+rec.data.name+' 字段管理',null,null,'object');        
+  }
+
   fns.delModel = function() {
     ids = fns.getSel();
     if( ids ) {
@@ -136,12 +143,20 @@ Ext.onReady(function() {
           xtype: 'actioncolumn', //8
           width: 50,
           items: [{
-            icon: 'images/icon/edit.gif', 
+            icon: 'images/icon/edit.gif',
             tooltip: '编辑数据',
             handler: function(grid, rowIndex, colIndex) {
               fns.updateModel(grid,rowIndex,colIndex);              
             }
-          }]
+          },{
+            icon: 'images/icon/edit.gif',
+            tooltip: '管理字段',
+            handler: function(grid, rowIndex, colIndex) {
+              fns.listModelField(grid,rowIndex,colIndex);              
+            }
+          }
+
+          ]
         }],   
         dockedItems: [{
             xtype: 'pagingtoolbar',

@@ -62,9 +62,9 @@ Ext.onReady(function() {
 			}      
 	}
 	ihost.open = function(url,title,store,icon,target,size){
-		target='window';
+		//target='window';
 		if(!url) return false;
-		target = target || 'object';
+		target = target || 'window';
 		size = size || { width: 600, height: 500};
 		size.width  = $(window).width() < size.width ? $(window).width() - 100 : size.width;
 		size.height = $(window).height() < size.height ? $(window).height() - 100 : size.height;
@@ -156,8 +156,12 @@ Ext.onReady(function() {
 				com.setActiveTab(com.add({
 					title: (title || '&nbsp;'),
 					iconCls: (icon || ''),
+					id: url,
 					itemId: url,
-					autoLoad: url,
+					autoLoad: {
+						scripts: true,
+						url: url
+					},
 					closable: true
 				}));
 			}
