@@ -142,7 +142,7 @@ class ModelExtFieldController extends Controller
 										'display_name'=>$field->display_name );
 		}		
 		$fields = array_to_json($r);		
-		$this->renderPartial('index',array('fields'=>$fields),false,true);
+		$this->renderPartial('index',array('id'=>$id,'fields'=>$fields),false,true);
 	}
 
 	/**

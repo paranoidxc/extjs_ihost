@@ -82,7 +82,7 @@ Ext.onReady(function() {
  
   var grid = Ext.create('Ext.grid.Panel', {
     store: store,     
-    id: 'modelextfield_container',
+    id: 'modelextfield_container_<?php echo $id?>',
     multiSelect: true,
     loadMask: true,
     selModel: Ext.create('Ext.selection.CheckboxModel'),
