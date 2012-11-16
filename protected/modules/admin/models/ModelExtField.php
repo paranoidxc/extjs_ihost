@@ -47,6 +47,7 @@ class ModelExtField extends CActiveRecord
 			array('model_id, e_type, field_name, display_name, tip, default_value, config', 'default'),
 			array('model_id, e_type, sort, is_blank, status', 'numerical', 'integerOnly'=>true),
 			array('field_name, display_name, tip, default_value', 'length', 'max'=>255),
+			array('model_id,field_name,display_name,tip','required'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, model_id, e_type, field_name, display_name, tip, default_value, config, sort, is_blank, status', 'safe', 'on'=>'search'),

@@ -55,33 +55,12 @@ class ModelExtFieldController extends Controller
 		));
 	}
 
-	public function actionSave()
-	{
-		print_r($_POST);
-	}
 
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
 	 */
-	public function actionCreate()
-	{
-		$model=new ModelExtField;
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['ModelExtField']))
-		{
-			$model->attributes=$_POST['ModelExtField'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id));
-		}
-
-		$this->render('create',array(
-			'model'=>$model,
-		));
-	}
+	
 
 	/**
 	 * Updates a particular model.
@@ -127,22 +106,78 @@ class ModelExtFieldController extends Controller
 			throw new CHttpException(400,'Invalid request. Please do not repeat this request again.');
 	}
 
+	public function actionCreate()
+	{
+		$model=new ModelExtField;
+
+		// Uncomment the following line if AJAX validation is needed
+		// $this->performAjaxValidation($model);
+
+		if(isset($_POST['ModelExtField']))
+		{
+			$model->attributes=$_POST['ModelExtField'];
+			if($model->save())
+				$this->redirect(array('view','id'=>$model->id));
+		}
+
+		$this->render('create',array(
+			'model'=>$model,
+		));
+	}
+
+	public function actionSave()
+	{
+		$r = array( 'success' => false, 'msg' => '操作失败' );		
+		if( isset($_POST['Form']) ){
+			$data = $_POST['Form'];
+			if( isset($data['id']) ){
+				$model = $this->loadModel( $data['id'] );
+				$model->attributes = $data;
+				$msg = 'update suc';
+			}else {				
+				$model = new ModelExtField;
+				$model->attributes = $data;
+				$msg = 'add suc';
+			}
+
+			if($model->save()) {
+				$r = array( 'success' => true, 'msg' => $msg );			
+			}else {
+				$r['msg'] = 'ffff';
+				$r['r'] = CActiveForm::validate($model);
+			}	
+		}
+		echo CJSON::encode($r);
+		exit;
+	}
+
 	/**
 	 * Lists all models.
 	 */
 	public function actionIndex()
 	{
-		$id = $_GET['id'];
-		$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $id ));
-		$r = array();
-		foreach($fields as $field){			
-			$r[] = array( 'id'	=>$field->id,
-										'model_id' => $field->model_id,
-										'field_name' => $field->field_name,
-										'display_name'=>$field->display_name );
-		}		
-		$fields = array_to_json($r);		
-		$this->renderPartial('index',array('id'=>$id,'fields'=>$fields),false,true);
+		if(isset($_REQUEST['id'])) {
+			$id = $_REQUEST['id'];
+			if( $id == -1 ){
+				$model = new ModelExtField;
+				$model->model_id = $_REQUEST['model_id'];
+			}else {
+				$model = $this->loadModel($id);
+			}
+			$this->renderPartial('create',array('model' => $model),false,true);	
+		}else {
+			$model_id = $_GET['model_id'];
+			$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $model_id ));
+			$r = array();
+			foreach($fields as $field){			
+				$r[] = array( 'id'	=>$field->id,
+							'model_id' => $field->model_id,
+							'field_name' => $field->field_name,
+							'display_name'=>$field->display_name );
+			}		
+			$fields = array_to_json($r);		
+			$this->renderPartial('index',array('model_id'=>$model_id,'fields'=>$fields),false,true);
+		}
 	}
 
 	/**

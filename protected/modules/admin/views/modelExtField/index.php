@@ -1,6 +1,7 @@
 <script type="text/javascript"> 
 Ext.onReady(function() {    	
   var fns = {}; 
+  var model_id = "<?php echo $model_id;?>";
   fns.getSel = function(){    
     var nodes = grid.getSelectionModel().getSelection();
     ids = '';
@@ -17,15 +18,15 @@ Ext.onReady(function() {
   }
 
   fns.addModel = function(){    
-    var url = Ext.ModelManager.getModel('ModelExt').getProxy().url+'&id=-1';    
-    ihost.open(url,'添加模型',store);
+    var url = Ext.ModelManager.getModel('ModelExtField').getProxy().url+'&id=-1&model_id'+model_id;
+    ihost.open(url,'添加模型字段',store);
   };
 
   fns.updateModel = function(grid,rowIndex,colIndex) {   
     if( grid.store != undefined) {
       var rec = grid.getStore().getAt(rowIndex);  
-      var url = Ext.ModelManager.getModel('ModelExt').getProxy().url+'&id='+rec.data.id;                
-      ihost.open( url,'编辑模型',store);        
+      var url = Ext.ModelManager.getModel('ModelExtField').getProxy().url+'&id='+rec.data.id+"&model_id"+model_id;
+      ihost.open( url,'编辑模型字段',store);    
     }
   }
 
@@ -70,7 +71,7 @@ Ext.onReady(function() {
     ],
     proxy: {
       type: 'rest',
-      url :  "<?php echo url('admin/modelext/index')?>"
+      url :  "<?php echo url('admin/modelextfield/index')?>"
     }      
   });
 

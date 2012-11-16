@@ -30,7 +30,7 @@ Ext.onReady(function() {
 
   fns.listModelField = function(grid,rowIndex,colIndex){
     var rec = grid.getStore().getAt(rowIndex);      
-    var url = "index.php?r=/admin/modelextfield/index&id="+rec.data.id;
+    var url = "index.php?r=/admin/modelextfield/index&model_id="+rec.data.id;
     ihost.open( url,'模型 '+rec.data.name+' 字段管理',null,null,'object');        
   }
 
