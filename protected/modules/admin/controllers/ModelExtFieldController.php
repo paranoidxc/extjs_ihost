@@ -27,7 +27,7 @@ class ModelExtFieldController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','save'),
+				'actions'=>array('index','view','save','list'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -127,19 +127,18 @@ class ModelExtFieldController extends Controller
 
 	public function actionSave()
 	{
-		$r = array( 'success' => false, 'msg' => '操作失败' );		
-		if( isset($_POST['Form']) ){
+		$r = array( 'success' => false, 'msg' => '222' );				
+		if( isset($_POST['Form']) ){			
 			$data = $_POST['Form'];
-			if( isset($data['id']) ){
+			if( isset($data['id']) && strlen($data['id']) > 0 ){
 				$model = $this->loadModel( $data['id'] );
 				$model->attributes = $data;
 				$msg = 'update suc';
-			}else {				
+			}else {										
 				$model = new ModelExtField;
 				$model->attributes = $data;
 				$msg = 'add suc';
 			}
-
 			if($model->save()) {
 				$r = array( 'success' => true, 'msg' => $msg );			
 			}else {
@@ -151,6 +150,17 @@ class ModelExtFieldController extends Controller
 		exit;
 	}
 
+	public function actionList() {
+		$model_id = $_GET['model_id'];
+		$r['count'] = ModelExtField::model()->count( array('model_id' => $model_id ));
+		$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $model_id ));
+		$t = array();
+		foreach($fields as $field){			
+		}		
+		$r['data'] = $fields;
+    echo CJSON::encode($r);		
+		exit;
+	}
 	/**
 	 * Lists all models.
 	 */
@@ -163,19 +173,27 @@ class ModelExtFieldController extends Controller
 				$model->model_id = $_REQUEST['model_id'];
 			}else {
 				$model = $this->loadModel($id);
+				// print_r("<PRE>");
+				// print_r($model->config);
+				// $items = explode("\n",$model->config);  
+				// print_r($items);
+				// print_r("</PRE>");
+				// exit;
+				$model->config = addslashes($model->config);
+				$model->config = str_replace(array("\n","\r"),array("\\n","\\r"),$model->config); 
 			}
 			$this->renderPartial('create',array('model' => $model),false,true);	
 		}else {
 			$model_id = $_GET['model_id'];
-			$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $model_id ));
-			$r = array();
-			foreach($fields as $field){			
-				$r[] = array( 'id'	=>$field->id,
-							'model_id' => $field->model_id,
-							'field_name' => $field->field_name,
-							'display_name'=>$field->display_name );
-			}		
-			$fields = array_to_json($r);		
+			// $fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $model_id ));
+			// $r = array();
+			// foreach($fields as $field){			
+			// 	$r[] = array( 'id'	=>$field->id,
+			// 				'model_id' => $field->model_id,
+			// 				'field_name' => $field->field_name,
+			// 				'display_name'=>$field->display_name );
+			// }		
+			// $fields = array_to_json($r);		
 			$this->renderPartial('index',array('model_id'=>$model_id,'fields'=>$fields),false,true);
 		}
 	}

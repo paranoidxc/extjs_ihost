@@ -80,13 +80,13 @@ class ModelExtController extends Controller
 
 	public function actionSave()
 	{
-		$r = array( 'success' => false, 'msg' => '操作失败' );		
+		$r = array( 'success' => false, 'msg' => '222222' );		
 		if( isset($_POST['id']) && !empty($_POST['id']) ) {
 			$id = $_POST['id'];
 			$model = $this->loadModel($id);
 			$model->attributes = $_POST;
 			$msg = 'update suc';
-		}else {
+		}else {			
 			$model = new ModelExt;
 			$model->attributes = $_POST;
 			$msg = 'add suc';

@@ -44,10 +44,11 @@ class ModelExtField extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('model_id, e_type, field_name, display_name, tip, default_value, config', 'default'),
+			array('model_id, e_type, field_name, display_name, tip, default_value, config,real_field_name', 'default'),
 			array('model_id, e_type, sort, is_blank, status', 'numerical', 'integerOnly'=>true),
 			array('field_name, display_name, tip, default_value', 'length', 'max'=>255),
 			array('model_id,field_name,display_name,tip','required'),
+			array('real_field_name','unique', 'criteria'=> array( 'model_id' =>$this->model_id )  ),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
 			array('id, model_id, e_type, field_name, display_name, tip, default_value, config, sort, is_blank, status', 'safe', 'on'=>'search'),

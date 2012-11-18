@@ -18,14 +18,14 @@ Ext.onReady(function() {
   }
 
   fns.addModel = function(){    
-    var url = Ext.ModelManager.getModel('ModelExtField').getProxy().url+'&id=-1&model_id'+model_id;
+    var url = Ext.ModelManager.getModel('ModelExtField').getProxy().url+'&id=-1&model_id='+model_id;
     ihost.open(url,'添加模型字段',store);
   };
 
   fns.updateModel = function(grid,rowIndex,colIndex) {   
     if( grid.store != undefined) {
       var rec = grid.getStore().getAt(rowIndex);  
-      var url = Ext.ModelManager.getModel('ModelExtField').getProxy().url+'&id='+rec.data.id+"&model_id"+model_id;
+      var url = Ext.ModelManager.getModel('ModelExtField').getProxy().url+'&id='+rec.data.id+"&model_id="+model_id;
       ihost.open( url,'编辑模型字段',store);    
     }
   }
@@ -75,15 +75,38 @@ Ext.onReady(function() {
     }      
   });
 
-  var itemsPerPage = 20;
+  var itemsPerPage = 100;
   var store = Ext.create('Ext.data.Store', {
-  	model : 'ModelExtField',
-  	data: <?php echo $fields ?>
+    model: 'ModelExtField', 
+    pageSize: itemsPerPage, // items per page
+    proxy: {        
+      type: 'ajax',       
+      api: {        
+        read:  "<?php echo url('admin/modelextfield/list', array('model_id' => $_GET['model_id']) ) ?>"
+      },
+      extraParams:{
+        format:'json'
+      },
+      reader: {
+        type: 'json',
+        root: 'data',       
+        totalProperty: 'total',
+        successProperty: 'success',
+        messageProperty: 'message'
+      },
+      writer: {
+        type: 'json',
+        writeAllFileds: true,
+        encode: false,
+        root: 'data'
+      }
+    },    
+    autoLoad : true 
   });
  
   var grid = Ext.create('Ext.grid.Panel', {
     store: store,     
-    id: 'modelextfield_container_<?php echo $id?>',
+    id: 'modelextfield_container_<?php echo $model_id?>',
     multiSelect: true,
     loadMask: true,
     selModel: Ext.create('Ext.selection.CheckboxModel'),

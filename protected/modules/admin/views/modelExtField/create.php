@@ -1,5 +1,21 @@
 <script type="text/javascript"> 
-
+field_type_list = Ext.create('Ext.data.Store',{
+    fields:['id','name'],
+    data:[ 
+      { 'id' :'0', 'name':'text'},
+      { 'id' :'1', 'name':'password'},
+      { 'id' :'2', 'name':'select'},
+      { 'id' :'4', 'name':'raido'},
+      //{ 'id' :'4', 'name':'raido group'},
+      { 'id' :'5', 'name':'checbox'},
+      { 'id' :'6', 'name':'checkbox group'},
+      { 'id' :'7', 'name':'date'},
+      { 'id' :'8', 'name':'linkage'},
+      { 'id' :'9', 'name':'datetime'},
+      { 'id' :'10', 'name':'TextArea'},
+      { 'id' :'11', 'name':'Rich Html'}
+    ]
+});
 var form = Ext.create('Ext.form.Panel', {  
   //url: WEB_PREFIX+'index.php?r=user/save',
   url: "<?php echo url('admin/modelextfield/save') ?>",
@@ -41,7 +57,30 @@ var form = Ext.create('Ext.form.Panel', {
     name: 'Form[display_name]',
     allowBlank: false, 
     value: "<?php echo $model->display_name; ?>"
-  },
+  },{
+    xtype:'combobox',
+    fieldLabel : 'HTML类型',
+    displayField: 'name',
+    name:'Form[e_type]',        
+    value: "0",
+    blankText : 'Field 不能为空',
+    allowBlank: true,
+    store: field_type_list,
+    queryModel: 'local',
+    valueField:'id',
+    typeAhead: true,
+    editable : false,
+    value: "<?php echo $model->e_type ?>",
+    listeners:{
+      //scope: yourScope, this, Object newValue, Object oldValue, Object eOpts
+      'select': function(that,newValue,oldValue,e) {
+        Ext.select('.ele_init').hide();
+        var cls = '.ele_select_' + that.getValue();          
+        var ele_list = Ext.select( cls );
+        ele_list.show();
+      }
+    }
+  }, 
   {
     fieldLabel: '提示',    
     name: 'Form[tip]',    
@@ -53,17 +92,18 @@ var form = Ext.create('Ext.form.Panel', {
     value: "<?php echo $model->default_value; ?>"
   },
   {
-    xtype : 'textareafield',
+    xtype : 'textarea',
     fieldLabel: '配置项',    
     name: 'Form[config]',    
-    value: "<?php echo $model->config; ?>"
+    //value: 'line1\n\nline2'
+    value: "<?php echo ($model->config); ?>"
   },
 
   {
     xtype:'combobox',
     fieldLabel : '状 态',
     displayField: 'name',
-    name:'status',        
+    name:'From[status]',        
     value: "<?php echo $model->status; ?>",
     blankText : '状态不能为空',
     allowBlank: true,
@@ -77,7 +117,7 @@ var form = Ext.create('Ext.form.Panel', {
   buttons: [{
     text: '保存',
     handler:function(){
-    	var store = Ext.getCmp('modelext_container').store			
+    	var store = Ext.getCmp("modelextfield_container_<?php echo $model->model_id?>").store			
 			ihost.form_submit(form,store);
     	}
   	},{
