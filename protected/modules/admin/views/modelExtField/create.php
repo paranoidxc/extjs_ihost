@@ -91,6 +91,13 @@ var form = Ext.create('Ext.form.Panel', {
     name: 'Form[default_value]',    
     value: "<?php echo $model->default_value; ?>"
   },
+  {      
+    xtype : 'checkboxfield',
+    fieldLabel: '是否为空',
+    name: 'Form[is_blank]',
+    inputValue : 1,
+    checked: "<?php echo $model->is_blank ? true : false; ?>"
+  },
   {
     xtype : 'textarea',
     fieldLabel: '配置项',    

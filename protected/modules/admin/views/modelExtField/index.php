@@ -36,29 +36,37 @@ Ext.onReady(function() {
     ihost.open( url,'字段管理',null,null,'object');        
   }
 
-  fns.delModel = function() {
-    ids = fns.getSel();
-    if( ids ) {
-      Ext.MessageBox.confirm('操作提示','修改记录的状态，正常改为删除，反之亦然',function(btn){
-        if( btn == 'yes') {
-          Ext.Ajax.request({
-            url: "<?php echo url('admin/syslditem/delete') ?>",
-            params : {'id' : ids },
-            success: function(resp,opts) {          
-              var respText = Ext.decode(resp.responseText);                             
-              Ext.Msg.alert('', respText.msg); 
-              store.load();
-            },
-            failure: function(resp,opts) { 
-              var respText = Ext.decode(resp.responseText); 
-              Ext.Msg.alert('错误', respText.msg); 
-            }
-          });
-        }
-      });
-    }else {
-      Ext.Msg.alert("操作提示", '请选择要更新的记录'); 
+  fns.delModel = function(grid,rowIndex,colIndex) {
+    var ids = fns.getSel();    
+    if( !ids ){      
+      if( grid.store != undefined) {
+        var rec = grid.getStore().getAt(rowIndex);
+        ids = rec.data.id;
+      }
     }
+
+    if( ids == false ){      
+      Ext.Msg.alert("操作提示", '请选择要更新的记录');
+      return false;
+    }
+
+    Ext.MessageBox.confirm('操作提示','修改记录的状态，正常改为删除，反之亦然',function(btn){
+      if( btn == 'yes') {
+        Ext.Ajax.request({
+          url: "<?php echo url('admin/modelextfield/delete') ?>",
+          params : {'id' : ids },
+          success: function(resp,opts) {          
+            var respText = Ext.decode(resp.responseText);                             
+            Ext.Msg.alert('', respText.msg); 
+            store.load();
+          },
+          failure: function(resp,opts) { 
+            var respText = Ext.decode(resp.responseText); 
+            Ext.Msg.alert('错误', respText.msg); 
+          }
+        });
+      }
+    });
   }
 
   Ext.define('ModelExtField',{
@@ -67,7 +75,8 @@ Ext.onReady(function() {
       {name: "id"},
       {name: 'model_id', type: 'string'},      
       {name: 'field_name', type: 'string'},
-      {name: 'display_name', type: 'string'}
+      {name: 'display_name', type: 'string'},
+      {name: 'status', type: 'string'}
     ],
     proxy: {
       type: 'rest',
@@ -100,7 +109,7 @@ Ext.onReady(function() {
         encode: false,
         root: 'data'
       }
-    },    
+    },
     autoLoad : true 
   });
  
@@ -138,7 +147,17 @@ Ext.onReady(function() {
           xtype: 'textfield',
           allowBlank: false
         }
-      },{
+      },
+      {
+        text: '状态',  //4          
+        width: 100,
+        dataIndex: 'status',
+        editor:{
+          xtype: 'textfield',
+          allowBlank: false
+        }
+      },
+      {
           xtype: 'actioncolumn', //8
           width: 50,
           items: [{
@@ -146,6 +165,12 @@ Ext.onReady(function() {
             tooltip: '编辑',
             handler: function(grid, rowIndex, colIndex) {
               fns.updateModel(grid,rowIndex,colIndex);              
+            }
+          },{
+            icon: 'images/icon/delete.gif',
+            tooltip: '反转状态',
+            handler: function(grid, rowIndex, colIndex) {
+              fns.delModel(grid,rowIndex,colIndex);              
             }
           }
           ]
@@ -168,6 +193,11 @@ Ext.onReady(function() {
               iconCls: 'icon-add',
               flagStr: '添加模型',
               handler: fns.addModel
+            },{
+              text: '反转状态',
+              iconCls: 'icon-edit',
+              flagStr: '更新联动数据状态',
+              handler: fns.delModel
             }
           ]
         }],     
