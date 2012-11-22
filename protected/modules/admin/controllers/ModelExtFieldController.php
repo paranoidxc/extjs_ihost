@@ -27,17 +27,13 @@ class ModelExtFieldController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view','save','list'),
+				'actions'=>array('index','view','save','list','delete'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array('create','update'),
 				'users'=>array('*'),
-			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+			),			
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -91,8 +87,27 @@ class ModelExtFieldController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete($id=0)
 	{
+		$result = array( 'success' => false , 'msg' => 'error' );
+		$ids = $_REQUEST['id'];
+		$ids = explode(',',$ids);
+		if( is_array( $ids ) ) {
+			foreach( $ids as $id )	{				
+				if( (int)$id != 0 ){
+					$model = $this->loadModel($id);
+					if( !empty($model) ) {
+						$model->status = (int)(!$model->status);
+						$model->save();						
+					};
+				}
+			}
+			$result['msg'] = '操作成功';
+			$result['success'] = true;
+		}		
+		echo json_encode($result);
+		exit;
+
 		if(Yii::app()->request->isPostRequest)
 		{
 			// we only allow deletion via POST request
@@ -166,6 +181,7 @@ class ModelExtFieldController extends Controller
     	echo CJSON::encode($r);		
 		exit;
 	}
+	
 	/**
 	 * Lists all models.
 	 */
@@ -177,28 +193,13 @@ class ModelExtFieldController extends Controller
 				$model = new ModelExtField;
 				$model->model_id = $_REQUEST['model_id'];
 			}else {
-				$model = $this->loadModel($id);
-				// print_r("<PRE>");
-				// print_r($model->config);
-				// $items = explode("\n",$model->config);  
-				// print_r($items);
-				// print_r("</PRE>");
-				// exit;
+				$model = $this->loadModel($id);				
 				$model->config = addslashes($model->config);
 				$model->config = str_replace(array("\n","\r"),array("\\n","\\r"),$model->config); 
 			}
 			$this->renderPartial('create',array('model' => $model),false,true);	
 		}else {
 			$model_id = $_GET['model_id'];
-			// $fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $model_id ));
-			// $r = array();
-			// foreach($fields as $field){			
-			// 	$r[] = array( 'id'	=>$field->id,
-			// 				'model_id' => $field->model_id,
-			// 				'field_name' => $field->field_name,
-			// 				'display_name'=>$field->display_name );
-			// }		
-			// $fields = array_to_json($r);		
 			$this->renderPartial('index',array('model_id'=>$model_id,'fields'=>$fields),false,true);
 		}
 	}
