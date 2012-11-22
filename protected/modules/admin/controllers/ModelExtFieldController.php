@@ -152,13 +152,18 @@ class ModelExtFieldController extends Controller
 
 	public function actionList() {
 		$model_id = $_GET['model_id'];
-		$r['count'] = ModelExtField::model()->count( array('model_id' => $model_id ));
+		$model_id = 1;
+		
+		
+		//$r['count'] = ModelExtField::model()->count( );
+		
 		$fields = ModelExtField::model()->findAllByAttributes( array('model_id' => $model_id ));
 		$t = array();
 		foreach($fields as $field){			
 		}		
 		$r['data'] = $fields;
-    echo CJSON::encode($r);		
+		$r['count'] = 1;
+    	echo CJSON::encode($r);		
 		exit;
 	}
 	/**
