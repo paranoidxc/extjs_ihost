@@ -33,14 +33,14 @@ Ext.onReady(function() {
   }
 
   fns.addModel = function(){    
-    var url = Ext.ModelManager.getModel('UserModel').getProxy().url+'&id=-1';        
+    var url = Ext.ModelManager.getModel('ArticleModel').getProxy().url+'&id=-1';        
     ihost.open(url,'create article',store,'','object');
   };
 
   fns.updateModel = function(grid,rowIndex,colIndex) {
     var rec = grid.getStore().getAt(rowIndex);  
-    var url = Ext.ModelManager.getModel('UserModel').getProxy().url+'&id='+rec.data.id;    
-    ihost.open( url,' update user',store);
+    var url = Ext.ModelManager.getModel('ArticleModel').getProxy().url+'&id='+rec.data.id;    
+    ihost.open( url,' update article',store);
   }
 
   fns.delModel = function() {
@@ -49,7 +49,7 @@ Ext.onReady(function() {
       Ext.MessageBox.confirm('title','message',function(btn){
         if( btn == 'yes') {
           Ext.Ajax.request({
-            url: WEB_PREFIX+'index.php?r=user/del',
+            url: "<?php echo url('admin/article/del') ?>",
             params : {'id' : ids },
             success: function(resp,opts) {          
               var respText = Ext.decode(resp.responseText);                             
@@ -74,36 +74,27 @@ Ext.onReady(function() {
     grid.getStore().load();
   };
 
-  Ext.define('UserModel',{
+  Ext.define('ArticleModel',{
       extend: 'Ext.data.Model',
       fields: [
         {name: "id"},
-        {name: "username"},
-        {name: "password", type: 'string'},
-        {name: "itype", type: 'string'}
+        {name: "title", type: 'string'},
+        {name: "category_id", type: 'string'}        
       ],
       proxy: {
         type: 'rest',
-        url :  WEB_PREFIX+'index.php?r=user/index'
-      },
-      validation: [
-        { type:'presence', field: 'username' },
-        { type:'presence', field: 'password' }
-      ]
+        url :  "<?php echo url('admin/article/index') ?>"
+      }
     });  
 
-  var itemsPerPage = 5;  
+  var itemsPerPage = 20;  
   var store = Ext.create('Ext.data.Store', {
-    model: 'UserModel', 
+    model: 'ArticleModel', 
     pageSize: itemsPerPage, // items per page
     proxy: {        
       type: 'ajax',       
-      api: {
-        //read:  WEB_PREFIX+'index.php?r=user/list',        
-        read:  "<?php echo url('admin/article/list', array('category_id' => $_GET['category_id']) ) ?>",
-        create: WEB_PREFIX+'index.php?r=user/view',
-        update: WEB_PREFIX+'index.php?r=user/view',
-        destroy: WEB_PREFIX+'index.php?r=user/view'
+      api: {       
+        read:  "<?php echo url('admin/article/list', array('category_id' => $_GET['category_id']) ) ?>"
       },
       extraParams:{
         format:'json'
@@ -137,25 +128,17 @@ Ext.onReady(function() {
     columns: [ 
       Ext.create('Ext.grid.RowNumberer'), 
       {
-        text: '用户名', //3
+        text: '标题', //3
         flex: 1,
-        dataIndex: 'username',
+        dataIndex: 'title',
         editor:{
           xtype: 'textfield',
           allowBlank: false
         }
       },{
-        text: '密码',  //4          
+        text: '类别',  //4          
         width: 100,
-        dataIndex: 'password',
-        editor:{
-          xtype: 'textfield',
-          allowBlank: false
-        }
-      },{
-        text: '用户类型',  //4          
-        width: 100,
-        dataIndex: 'itype'        
+        dataIndex: 'category_id'
       },{
           xtype: 'actioncolumn', //8
           width: 50,
@@ -191,21 +174,14 @@ Ext.onReady(function() {
             },{
               text: '添加',
               iconCls: 'icon-add',
-              flagStr: '添加用户',
+              flagStr: '添加',
               handler: fns.addModel
             },{
               text: '删除',
               iconCls: 'icon-delete',
-              flagStr: '删除用户，请选择用户',
+              flagStr: '删除，请选择',
               handler: fns.delModel              
             },
-            /*{
-              xtype: 'textfield',
-              fieldLabel: '用户名',
-              labelWidth: 50,
-              allowBlank: true,              
-              name: 'Search[username]'
-            },*/
             {
               width: 200,
               fieldLabel: '用户名',
@@ -233,7 +209,7 @@ Ext.onReady(function() {
             }]
         }],     
       width: '100%',
-      title: '用户管理',      
+      title: '内容管理',      
       viewConfig: {
         stripeRows: true,
         enableTextSelection: true

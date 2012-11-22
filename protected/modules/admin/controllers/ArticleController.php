@@ -40,11 +40,6 @@ class ArticleController extends GController
 			),
 		);
 	}
-
-	
-  
-
-
 	/**
    * Lists all models.
    */
@@ -76,9 +71,7 @@ class ArticleController extends GController
       $id = $_REQUEST['id'];  
       header('Content-type: application/json');
       if( $id == -1 ){
-        $model = new User;        
-        $model->status = '1'; 
-        $model->itype = '0';  
+        $model = new Article;
       }else {
         $model = $this->loadModel($id);       
       }     
