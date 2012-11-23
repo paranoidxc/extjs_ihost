@@ -28,79 +28,42 @@ var form = Ext.create('Ext.form.Panel', {
 		anchor: '100%'
 	},
 	border: false,
-	items: [  {
-		xtype:'combobox',
-		fieldLabel : 'Field Type',
-		displayField: 'name',
-		name:'ModelExtField[e_type]',        
-		value: "0",
-		blankText : 'Field 不能为空',
-		allowBlank: true,
-		store: field_type_list,
-		queryModel: 'local',
-		valueField:'id',
-		typeAhead: true,
-		editable : false,
-		listeners:{
-        //scope: yourScope, this, Object newValue, Object oldValue, Object eOpts
-        'select': function(that,newValue,oldValue,e) {
-        	Ext.select('.ele_init').hide();
-        	var cls = '.ele_select_' + that.getValue();          
-        	var ele_list = Ext.select( cls );
-        	ele_list.show();
-        }
-    }
-}, 
-{    
-	fieldLabel: 'Display Name',
-	name: 'ModelExtField[dispaly_name]'
-},
-{    
-	fieldLabel: 'Field Name',
-	name: 'ModelExtField[field_name]'
-},
-{      
-	xtype : 'checkboxfield',
-	fieldLabel: 'is blank',
-	name: 'ModelExtField[is_blank]'
-},
-{    
-	fieldLabel: 'Default Name',
-	name: 'ModelExtField[default_value]'
-},
-{      
-	xtype : 'textareafield',
-	hidden: true,
-	cls: ' ele_init ele_select_2 ele_select_3 ele_select_4 ele_select_5 ele_select_6 ',
-	fieldLabel: 'Config',
-	name: 'ModelExtField[config]'
-},
-{
-	xtype:'combobox',  
-	hidden: true,
-	cls: ' ele_init ele_select_1 ',
-	fieldLabel : '用户类型',
-	displayField: 'name',
-	name:'itype',        
-	value: "1",
-	blankText : '用户类型不能为空',
-	allowBlank: true,
-	store: user_type_list,
-	queryModel: 'local',
-	valueField:'id',
-	typeAhead: true,
-	editable : false
-}],
-buttons: [{
-	text: '保存',
-	handler:function(){
-		
-	}
-},{
-	text:'取消',
-	handler:function(){
-	}
-}]
+	items: [   
+		{    
+			fieldLabel: '标题',
+			name: 'Form[title]',
+			value: "<?php echo $model->title ?>"
+		},
+		{
+		    xtype : 'htmleditor',
+		    plugins: [  
+		        Ext.create('Ext.ux.form.plugin.HtmlEditor',{  
+		            enableAll:  true  
+		        })  
+		    ],
+		    fieldLabel: '内容',
+		    allowBlank: true,
+		    border: "10 5 3 10",
+		    height: 400,
+		    name: 'Form[desc]',
+		    value:"<?php echo $model->desc; ?>"
+		},
+		<?php echo $this->renderPartial( '_fields', array('fields' => $fields ) ,true,true ) ?>
+	],
+	buttons: [{
+		text: '保存',
+		handler:function(){
+			
+		}
+	},{
+		text:'取消',
+		handler:function(){
+		}
+	}]
 }); 
-ihost.last_win.add( form );
+var com = Ext.getCmp('centerBodyCom');
+	var tab = com.getActiveTab();	
+	if( !tab.items.length ) {
+    tab.add( form );
+}
 </script>

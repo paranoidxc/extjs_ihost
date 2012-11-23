@@ -521,7 +521,8 @@ class Category extends CActiveRecord
 		  'forumarticlesCount' 	=> array( self::STAT,         'Article', 'category_id'  ),
 			'articles' 	          => array( self::HAS_MANY,     'Article', 'category_id' , 'order'=>' articles.create_time DESC '),
 			'attachments'         => array( self::HAS_MANY,     'Attachment', 'category_id' ),			
-			'images'              => array( self::HAS_MANY,     'Attachment', 'category_id' )
+			'images'              => array( self::HAS_MANY,     'Attachment', 'category_id' ),
+      'modelext'            => array( self::BELONGS_TO,   'ModelExt',   'model_id'),
 		);
 	}
 	/**

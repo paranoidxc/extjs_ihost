@@ -40,7 +40,7 @@ Ext.onReady(function() {
   fns.updateModel = function(grid,rowIndex,colIndex) {
     var rec = grid.getStore().getAt(rowIndex);  
     var url = Ext.ModelManager.getModel('ArticleModel').getProxy().url+'&id='+rec.data.id;    
-    ihost.open( url,' update article',store);
+    ihost.open( url,' update article',store,'','object');
   }
 
   fns.delModel = function() {

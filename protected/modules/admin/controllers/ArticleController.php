@@ -69,13 +69,17 @@ class ArticleController extends GController
   {   
     if( isset($_REQUEST['id']) ) {
       $id = $_REQUEST['id'];  
-      header('Content-type: application/json');
+      // header('Content-type: application/json');
       if( $id == -1 ){
         $model = new Article;
       }else {
         $model = $this->loadModel($id);       
       }     
-      $this->renderPartial('create',array('model' => $model),false,true);
+      $model->category_id = 1;
+      $leaf = $model->leaf;
+      $modelext = $leaf->modelext;
+      $fields = $modelext->fields;
+      $this->renderPartial('create',array('model' => $model, 'fields' => $fields ),false,true);
     }else {
       $this->renderPartial('index',array(),false,true);
     }    
@@ -86,7 +90,7 @@ class ArticleController extends GController
 		if($this->_model===null)
 		{
 			if(isset($_GET['id']))
-				$this->_model=Attachment::model()->findbyPk($_GET['id']);
+				$this->_model=Article::model()->findbyPk($_GET['id']);
 			if($this->_model===null)
 				throw new CHttpException(404,'The requested page does not exist.');
 		}
